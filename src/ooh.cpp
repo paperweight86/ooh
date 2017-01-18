@@ -34,50 +34,80 @@ namespace
 	}
 }
 
-void ooh::load_ooh_functions(uti::ptr dll_ptr, const char* function_prefix, ooh_behaviour_functions* table)
+bool ooh::load_ooh_functions(uti::ptr dll_ptr, const char* function_prefix, ooh_behaviour_functions* table)
 {
+	bool all_loaded = true;
+
 	const int buffer_size = 256;
 	char buffer[buffer_size];
 
 	sprintf_s<buffer_size>(buffer, "%s_%s", function_prefix, "load_all");
 	table->load_all = (ooh_load_all_signature*)GetProcAddress((HMODULE)dll_ptr, buffer);
+	if (table->load_all == nullptr)
+		all_loaded = false;
 
-	sprintf_s<buffer_size>(buffer, "%s_%s", function_prefix, "save_all_size");
+	sprintf_s<buffer_size>(buffer, "%s_%s", function_prefix, "get_save_all_size");
 	table->save_all_size = (ooh_get_save_all_size_signature*)GetProcAddress((HMODULE)dll_ptr, buffer);
+	if (table->save_all_size == nullptr)
+		all_loaded = false;
 
 	sprintf_s<buffer_size>(buffer, "%s_%s", function_prefix, "save_all");
 	table->save_all = (ooh_save_all_signature*)GetProcAddress((HMODULE)dll_ptr, buffer);
+	if (table->save_all == nullptr)
+		all_loaded = false;
 
 	sprintf_s<buffer_size>(buffer, "%s_%s", function_prefix, "create");
 	table->create = (ooh_create_signature*)GetProcAddress((HMODULE)dll_ptr, buffer);
+	if (table->create == nullptr)
+		all_loaded = false;
 
 	sprintf_s<buffer_size>(buffer, "%s_%s", function_prefix, "load");
 	table->load = (ooh_load_signature*)GetProcAddress((HMODULE)dll_ptr, buffer);
+	if (table->load == nullptr)
+		all_loaded = false;
 
 	sprintf_s<buffer_size>(buffer, "%s_%s", function_prefix, "save");
 	table->save = (ooh_save_signature*)GetProcAddress((HMODULE)dll_ptr, buffer);
+	if (table->save == nullptr)
+		all_loaded = false;
 
 	sprintf_s<buffer_size>(buffer, "%s_%s", function_prefix, "data_size");
 	table->data_size = (ooh_data_size_signature*)GetProcAddress((HMODULE)dll_ptr, buffer);
+	if (table->data_size == nullptr)
+		all_loaded = false;
 
 	sprintf_s<buffer_size>(buffer, "%s_%s", function_prefix, "start");
 	table->start = (ooh_start_signature*)GetProcAddress((HMODULE)dll_ptr, buffer);
+	if (table->start == nullptr)
+		all_loaded = false;
 
 	sprintf_s<buffer_size>(buffer, "%s_%s", function_prefix, "update");
 	table->update = (ooh_update_signature*)GetProcAddress((HMODULE)dll_ptr, buffer);
+	if (table->update == nullptr)
+		all_loaded = false;
 
 	sprintf_s<buffer_size>(buffer, "%s_%s", function_prefix, "stop");
 	table->stop = (ooh_stop_signature*)GetProcAddress((HMODULE)dll_ptr, buffer);
+	if (table->stop == nullptr)
+		all_loaded = false;
 
 	sprintf_s<buffer_size>(buffer, "%s_%s", function_prefix, "unload");
 	table->unload = (ooh_unload_signature*)GetProcAddress((HMODULE)dll_ptr, buffer);
+	if (table->unload == nullptr)
+		all_loaded = false;
+
+	return !all_loaded;
 }
 
-void ooh::ooh_initialise_dll(ooh_dll_data* ooh_data)
+bool ooh::ooh_initialise_dll(ooh_dll_data* ooh_data)
 {
 	HMODULE ooh_test_module = LoadLibraryA(ooh_data->dll_name);
-	GetModuleFileNameA(ooh_test_module, ooh_data->dll_build_path, ooh_dll_data::max_dll_path);
-	FreeLibrary(ooh_test_module);
+	if (ooh_test_module == NULL)
+		return false;
+	if (GetModuleFileNameA(ooh_test_module, ooh_data->dll_build_path, ooh_dll_data::max_dll_path) == 0)
+		return false;
+	if (!FreeLibrary(ooh_test_module))
+		return false;
 
 	uti::u64 dll_path_len = strnlen(ooh_data->dll_build_path, ooh_dll_data::max_dll_path);
 	memcpy(ooh_data->dll_load_path, ooh_data->dll_build_path, dll_path_len);
@@ -90,26 +120,40 @@ void ooh::ooh_initialise_dll(ooh_dll_data* ooh_data)
 	ext = &ooh_data->dll_name[dll_name_len - 4];
 	memcpy(ext, in_use_end, strlen(in_use_end));
 
-	update_file_mod_time(ooh_data->dll_build_path, &ooh_data->dll_build_update_time);
+	if (!update_file_mod_time(ooh_data->dll_build_path, &ooh_data->dll_build_update_time))
+		return false;
+
+	return true;
 }
 
-void ooh::ooh_load_dll(ooh_dll_data* ooh_data)
+bool ooh::ooh_load_dll(ooh_dll_data* ooh_data)
 {
-	CopyFile(ooh_data->dll_build_path, ooh_data->dll_load_path, false);
+	if (!CopyFileA(ooh_data->dll_build_path, ooh_data->dll_load_path, false))
+		return false;
 	ooh_data->dll_handle = (uti::ptr)LoadLibraryA(ooh_data->dll_name);
 	update_file_mod_time(ooh_data->dll_build_path, &ooh_data->dll_build_update_time);
 	load_ooh_functions(ooh_data->dll_handle, ooh_data->dll_func_prefix, &ooh_data->functions);
+
+	return true;
 }
 
-void ooh::ooh_unload_dll(ooh_dll_data* ooh_data)
+bool ooh::ooh_unload_dll(ooh_dll_data* ooh_data)
 {
-	FreeLibrary((HMODULE)ooh_data->dll_handle);
-	DeleteFileA(ooh_data->dll_load_path);
+	if (!FreeLibrary((HMODULE)ooh_data->dll_handle))
+		return false;
+	if (!DeleteFileA(ooh_data->dll_load_path))
+		return false;
+
 	ooh_data->dll_handle = 0;
+	return true;
 }
 
-void ooh::ooh_reload_dll(ooh_dll_data* ooh_data)
+bool ooh::ooh_reload_dll(ooh_dll_data* ooh_data)
 {
-	ooh_unload_dll(ooh_data);
-	ooh_load_dll(ooh_data);
+	if (!ooh_unload_dll(ooh_data))
+		return false;
+	if (!ooh_load_dll(ooh_data))
+		return false;
+
+	return true;
 }

@@ -14,8 +14,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="inc\ooh.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
+    <ClCompile Include="src\ooh.cpp" />
   </ItemGroup>
 </Project>

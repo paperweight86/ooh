@@ -52,13 +52,13 @@ namespace ooh
 		ooh::ooh_behaviour_functions functions;
 	};
 
-	void load_ooh_functions(uti::ptr dll_ptr, const char* function_prefix, ooh_behaviour_functions* table);
+	bool load_ooh_functions(uti::ptr dll_ptr, const char* function_prefix, ooh_behaviour_functions* table);
 
-	void ooh_initialise_dll(ooh_dll_data* ooh_data);
+	bool ooh_initialise_dll(ooh_dll_data* ooh_data);
 
-	void ooh_load_dll(ooh_dll_data* ooh_data);
+	bool ooh_load_dll(ooh_dll_data* ooh_data);
 
-	void ooh_unload_dll(ooh_dll_data* ooh_data);
+	bool ooh_unload_dll(ooh_dll_data* ooh_data);
 
-	void ooh_reload_dll(ooh_dll_data* ooh_data);
+	bool ooh_reload_dll(ooh_dll_data* ooh_data);
 }

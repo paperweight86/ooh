@@ -36,7 +36,8 @@ static bool update_file_mod_time(const char* filepath, uti::u64* update_time)
 int main(int argc, char** argv)
 {
 	ooh::ooh_dll_data ooh_data = {};
-	const char* ooh_dll_name = "ooh_test.dll";
+	SetDllDirectoryA("C:\\Projects\\Ruin\\Data\\");
+	const char* ooh_dll_name = "test.dll";
 	memcpy(ooh_data.dll_name, ooh_dll_name, strlen(ooh_dll_name));
 	ooh::ooh_initialise_dll(&ooh_data);
 
@@ -55,6 +56,7 @@ int main(int argc, char** argv)
 			update_file_mod_time(ooh_data.dll_build_path, &new_update_time);
 			if (new_update_time != ooh_data.dll_build_update_time)
 			{
+				Sleep(250);
 				ooh::ooh_reload_dll(&ooh_data);
 			}
 		}
