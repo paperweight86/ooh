@@ -12,6 +12,7 @@
     <ClInclude Include="inc\ooh.h">
       <Filter>inc</Filter>
     </ClInclude>
+    <ClInclude Include="inc\ooh_gobj.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ooh.cpp" />

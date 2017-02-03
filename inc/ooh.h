@@ -15,7 +15,7 @@ namespace ooh
 	typedef void	 ooh_stop_signature(uti::u64 obj_id);
 	typedef void	 ooh_unload_signature(uti::u64 obj_id);
 
-	struct ooh_behaviour_functions
+	struct behaviour_functions
 	{
 		ooh_load_all_signature*				load_all;
 		ooh_get_save_all_size_signature*	save_all_size;
@@ -31,7 +31,10 @@ namespace ooh
 		ooh_unload_signature*	 unload;
 	};
 
-	struct ooh_dll_data
+	typedef uti::u64 script_inst_handle;
+	typedef uti::u32 script_handle;
+
+	struct script_data
 	{
 		static const uti::u32 max_dll_path = 260;
 
@@ -49,16 +52,19 @@ namespace ooh
 		// handle when the dll is loaded
 		uti::ptr dll_handle;
 
-		ooh::ooh_behaviour_functions functions;
+		// the unique id of this script
+		script_handle script_handle;
+
+		behaviour_functions functions;
 	};
 
-	bool load_ooh_functions(uti::ptr dll_ptr, const char* function_prefix, ooh_behaviour_functions* table);
+	bool load_functions(uti::ptr dll_handle, const char* function_prefix, behaviour_functions* table);
 
-	bool ooh_initialise_dll(ooh_dll_data* ooh_data);
+	bool init_script(script_data* ooh_data);
 
-	bool ooh_load_dll(ooh_dll_data* ooh_data);
+	bool load_script(script_data* ooh_data);
 
-	bool ooh_unload_dll(ooh_dll_data* ooh_data);
+	bool unload_script(script_data* ooh_data);
 
-	bool ooh_reload_dll(ooh_dll_data* ooh_data);
+	bool reload_script(script_data* ooh_data);
 }
