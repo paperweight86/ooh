@@ -1,0 +1,3 @@
+{
+	"cmd": ["$packages\\User\\build_msvc_ooh_dll.bat", "${file_path}", "${file_path}", "${file_base_name}", "${file_path}\\..\\..\\ooh\\inc", "${file_path}\\..\\..\\tat\\inc"]
+}
