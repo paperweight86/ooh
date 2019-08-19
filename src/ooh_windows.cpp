@@ -2,6 +2,7 @@
 #include "types.h"
 
 #include "ooh.h"
+#ifdef TAT_WINDOWS
 #define WIN32_LEAN_AND_MEAN
 #include "windows.h"
 
@@ -163,3 +164,5 @@ bool ooh::reload_script(script_data* ooh_data)
 
 	return true;
 }
+
+#endif
