@@ -150,13 +150,13 @@ bool ooh::load_script(script_data* ooh_data)
 	}
 
 	ooh_data->dll_handle = uti::load_library(ooh_data->dll_name);
-	if(ooh_data->dll_handle == NULL)
+	if(ooh_data->dll_handle == 0)
 	{
 		uti::log::inf_out("Unable to load dll %s", ooh_data->dll_name);
 		return false;
 	}
 
-	//uti::update_file_mod_time(ooh_data->dll_build_path, &ooh_data->dll_build_update_time);
+	uti::update_file_mod_time(ooh_data->dll_build_path, &ooh_data->dll_build_update_time);
 	
 	return load_functions(ooh_data->dll_handle, ooh_data->dll_func_prefix, &ooh_data->functions);
 }
