@@ -1,6 +1,7 @@
 #include "tat.h"
 #include "types.h"
 #include "file_system.h"
+#include "dynamic_libs.h"
 
 #include "ooh.h"
 #ifdef TAT_LINUX
@@ -8,6 +9,8 @@
 #include "non_crypto_hash.h"
 #include <dlfcn.h>
 #include <string.h>
+
+#include "log.h"
 
 bool ooh::load_functions(uti::ptr dll_handle, const char* function_prefix, behaviour_functions* table)
 {
@@ -19,57 +22,90 @@ bool ooh::load_functions(uti::ptr dll_handle, const char* function_prefix, behav
 	snprintf(buffer, buffer_size, "%s_%s", function_prefix, "load_all");
 	table->load_all = (ooh_load_all_signature*)dlsym((void*)dll_handle, buffer);
 	if (table->load_all == nullptr)
+	{
+		uti::log::inf_out("Unable to load function \"load_all\"");
 		all_loaded = false;
+	}
 
 	snprintf(buffer, buffer_size, "%s_%s", function_prefix, "get_save_all_size");
 	table->save_all_size = (ooh_get_save_all_size_signature*)dlsym((void*)dll_handle, buffer);
 	if (table->save_all_size == nullptr)
+	{
+		uti::log::inf_out("Unable to load function \"get_save_all_size\"");
 		all_loaded = false;
+	}
 
 	snprintf(buffer, buffer_size, "%s_%s", function_prefix, "save_all");
 	table->save_all = (ooh_save_all_signature*)dlsym((void*)dll_handle, buffer);
 	if (table->save_all == nullptr)
+	{
+		uti::log::inf_out("Unable to load function \"save_all\"");
 		all_loaded = false;
+	}
 
 	snprintf(buffer, buffer_size, "%s_%s", function_prefix, "create");
 	table->create = (ooh_create_signature*)dlsym((void*)dll_handle, buffer);
 	if (table->create == nullptr)
+	{
+		uti::log::inf_out("Unable to load function \"create\"");
 		all_loaded = false;
+	}
 
 	snprintf(buffer, buffer_size, "%s_%s", function_prefix, "load");
 	table->load = (ooh_load_signature*)dlsym((void*)dll_handle, buffer);
 	if (table->load == nullptr)
+	{
+		uti::log::inf_out("Unable to load function \"load\"");
 		all_loaded = false;
+	}
 
 	snprintf(buffer, buffer_size, "%s_%s", function_prefix, "save");
 	table->save = (ooh_save_signature*)dlsym((void*)dll_handle, buffer);
 	if (table->save == nullptr)
+	{
+		uti::log::inf_out("Unable to load function \"save\"");
 		all_loaded = false;
+	}
 
 	snprintf(buffer, buffer_size, "%s_%s", function_prefix, "data_size");
 	table->data_size = (ooh_data_size_signature*)dlsym((void*)dll_handle, buffer);
 	if (table->data_size == nullptr)
+	{
+		uti::log::inf_out("Unable to load function \"data_size\"");
 		all_loaded = false;
+	}
 
 	snprintf(buffer, buffer_size, "%s_%s", function_prefix, "start");
 	table->start = (ooh_start_signature*)dlsym((void*)dll_handle, buffer);
 	if (table->start == nullptr)
+	{
+		uti::log::inf_out("Unable to load function \"start\"");
 		all_loaded = false;
+	}
 
 	snprintf(buffer, buffer_size, "%s_%s", function_prefix, "update");
 	table->update = (ooh_update_signature*)dlsym((void*)dll_handle, buffer);
 	if (table->update == nullptr)
+	{
+		uti::log::inf_out("Unable to load function \"update\"");
 		all_loaded = false;
+	}
 
 	snprintf(buffer, buffer_size, "%s_%s", function_prefix, "stop");
 	table->stop = (ooh_stop_signature*)dlsym((void*)dll_handle, buffer);
 	if (table->stop == nullptr)
+	{
+		uti::log::inf_out("Unable to load function \"stop\"");
 		all_loaded = false;
+	}
 
 	snprintf(buffer, buffer_size, "%s_%s", function_prefix, "unload");
 	table->unload = (ooh_unload_signature*)dlsym((void*)dll_handle, buffer);
 	if (table->unload == nullptr)
+	{
+		uti::log::inf_out("Unable to load function \"unload\"");
 		all_loaded = false;
+	}
 
 	return !all_loaded;
 }
@@ -107,15 +143,22 @@ bool ooh::init_script(script_data* ooh_data)
 
 bool ooh::load_script(script_data* ooh_data)
 {
-	return false;
-
-	/*if (!CopyFileA(ooh_data->dll_build_path, ooh_data->dll_load_path, false))
+	if(!uti::file_copy(ooh_data->dll_build_path, ooh_data->dll_load_path))
+	{
+		uti::log::inf_out("Unable to copy dll to load path (from %s to %s)", ooh_data->dll_build_path, ooh_data->dll_load_path);
 		return false;
-	ooh_data->dll_handle = (uti::ptr)LoadLibraryA(ooh_data->dll_name);
-	uti::update_file_mod_time(ooh_data->dll_build_path, &ooh_data->dll_build_update_time);
-	load_functions(ooh_data->dll_handle, ooh_data->dll_func_prefix, &ooh_data->functions);
+	}
 
-	return true;*/
+	ooh_data->dll_handle = uti::load_library(ooh_data->dll_name);
+	if(ooh_data->dll_handle == NULL)
+	{
+		uti::log::inf_out("Unable to load dll %s", ooh_data->dll_name);
+		return false;
+	}
+
+	//uti::update_file_mod_time(ooh_data->dll_build_path, &ooh_data->dll_build_update_time);
+	
+	return load_functions(ooh_data->dll_handle, ooh_data->dll_func_prefix, &ooh_data->functions);
 }
 
 bool ooh::unload_script(script_data* ooh_data)
