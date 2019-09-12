@@ -1,7 +1,11 @@
 #include "types.h"
 #include "rearray.h"
 
+#ifdef TAT_WINDOWS
 #define OOH_EXPORT __declspec(dllexport)
+#elif defined(TAT_LINUX)
+#define OOH_EXPORT __attribute__((visibility("default")))
+#endif
 
 extern "C"
 {
@@ -22,23 +26,23 @@ extern "C"
 
 	OOH_EXPORT uti::u64 ooh_test_get_save_all_size()
 	{
-		return g_ooh_test_data_objects.size * sizeof(ooh_test_data) + sizeof(uti::u64);
+		return g_ooh_test_data_objects.count * sizeof(ooh_test_data) + sizeof(uti::u64);
 	}
 
 	OOH_EXPORT void	ooh_test_save_all(char* data, uti::u64 total_size)
 	{
 		assert(ooh_test_get_save_all_size() == total_size);
 		auto num_items = (uti::u64*) data;
-		*num_items = g_ooh_test_data_objects.size;
+		*num_items = g_ooh_test_data_objects.count;
 		data += sizeof(uti::u64);
-		memcpy(data, g_ooh_test_data_objects.data, g_ooh_test_data_objects.size * sizeof(ooh_test_data));
+		memcpy(data, g_ooh_test_data_objects.data, g_ooh_test_data_objects.count * sizeof(ooh_test_data));
 	}
 
 	OOH_EXPORT uti::u64 ooh_test_create()
 	{
 		ooh_test_data obj = ooh_test_data();
 		g_ooh_test_data_objects.add_end(obj);
-		return g_ooh_test_data_objects.size-1;
+		return g_ooh_test_data_objects.count-1;
 	}
 
 	OOH_EXPORT void ooh_test_load(uti::u64 obj_id, char* data, uti::u64 size)
