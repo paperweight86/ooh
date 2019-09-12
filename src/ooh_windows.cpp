@@ -113,7 +113,10 @@ bool ooh::init_script(script_data* ooh_data)
 	if (ooh_test_module == NULL)
 		return false;
 	if (GetModuleFileNameA(ooh_test_module, ooh_data->dll_build_path, script_data::max_dll_path) == 0)
+	{
+		FreeLibrary(ooh_test_module);
 		return false;
+	}
 	if (!FreeLibrary(ooh_test_module))
 		return false;
 
@@ -127,8 +130,7 @@ bool ooh::init_script(script_data* ooh_data)
 	ext = &ooh_data->dll_name[dll_name_len - 4];
 	memcpy(ext, in_use_end, strlen(in_use_end));
 
-	if (!update_file_mod_time(ooh_data->dll_build_path, &ooh_data->dll_build_update_time))
-		return false;
+	update_file_mod_time(ooh_data->dll_build_path, &ooh_data->dll_build_update_time);
 
 	return true;
 }

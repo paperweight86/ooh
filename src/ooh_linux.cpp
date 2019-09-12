@@ -112,35 +112,45 @@ bool ooh::load_functions(uti::ptr dll_handle, const char* function_prefix, behav
 
 bool ooh::init_script(script_data* ooh_data)
 {
-	return false;
-
-	/*uti::u32 dll_name_len = (uti::u32)strnlen(ooh_data->dll_name, (size_t)script_data::max_dll_path);
+	uti::u32 dll_name_len = (uti::u32)strnlen(ooh_data->dll_name, (size_t)script_data::max_dll_path);
 	ooh_data->script_handle = uti::non_crypto_hash_32(&ooh_data->dll_name, dll_name_len);
 
-	uti::ptr ooh_test_module = (uti::ptr)dlopen(ooh_data->dll_name, 0);
-	if (ooh_test_module == 0)
+	uti::ptr handle = uti::load_library(ooh_data->dll_name);
+
+	// TODO: Force NULL/nullptr to 0 in load_library and similar?
+	if(handle == 0)
+	{
+		uti::log::err_out("Unable to load ooh script \"%s\" (init_script)", ooh_data->dll_name);
 		return false;
-	//if (get_dll_path(ooh_test_module, ooh_data->dll_build_path, script_data::max_dll_path) == 0)
-	//	return false;
-	//if (!FreeLibrary(ooh_test_module))
-	//	return false;
+	}
+
+	char buffer [script_data::max_dll_path] = {};
+	if(!uti::get_path_library(handle, buffer, script_data::max_dll_path))
+	{
+		uti::unload_library(handle);
+		uti::log::err_out("Unable to get loaded script path for \"%s\" (init_script)", ooh_data->dll_name);
+		return false;
+	}
+
+	uti::unload_library(handle);
+
+	memcpy(&ooh_data->dll_build_path[0], &buffer[0], script_data::max_dll_path);
 
 	uti::u64 dll_path_len = strnlen(ooh_data->dll_build_path, script_data::max_dll_path);
+	
 	memcpy(ooh_data->dll_load_path, ooh_data->dll_build_path, dll_path_len);
-	char* ext = &ooh_data->dll_load_path[dll_path_len - 4];
-	const char* in_use_end = "_temp.dll";
+	char* ext = &ooh_data->dll_load_path[dll_path_len - 5];
+	const char* in_use_end = "_temp.ooh";
 	memcpy(ext, in_use_end, strlen(in_use_end));
 
 	memcpy(ooh_data->dll_func_prefix, ooh_data->dll_name, dll_name_len - 4);
-	ext = &ooh_data->dll_name[dll_name_len - 4];
-	memcpy(ext, in_use_end, strlen(in_use_end));
 
-	if (!update_file_mod_time(ooh_data->dll_build_path, &ooh_data->dll_build_update_time))
-		return false;
+	uti::update_file_mod_time(ooh_data->dll_build_path, &ooh_data->dll_build_update_time);
 
-	return true;*/
+	return true;
 }
 
+// TODO: Just load the dll in init 
 bool ooh::load_script(script_data* ooh_data)
 {
 	if(!uti::file_copy(ooh_data->dll_build_path, ooh_data->dll_load_path))
@@ -163,15 +173,9 @@ bool ooh::load_script(script_data* ooh_data)
 
 bool ooh::unload_script(script_data* ooh_data)
 {
-	return false;
-
-	/*if (!FreeLibrary((HMODULE)ooh_data->dll_handle))
-		return false;
-	if (!DeleteFileA(ooh_data->dll_load_path))
-		return false;
-
+	uti::unload_library(ooh_data->dll_handle);
 	ooh_data->dll_handle = 0;
-	return true;*/
+	return true;
 }
 
 bool ooh::reload_script(script_data* ooh_data)
