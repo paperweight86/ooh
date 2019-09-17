@@ -19,4 +19,4 @@ fixing_errors=""
 #fixing_errors="-Wno-everything"
 
 clang++ -c $fixing_errors -msse4.1 -std=c++1y -DLINUX -m64 $cpp_files $cpp_inc -I./ -I../Tat/inc
-ar -rcs ooh.a *.o
+ar -rcs Ooh.a *.o

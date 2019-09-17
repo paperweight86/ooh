@@ -9,12 +9,12 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="inc\ooh.h">
+    <ClInclude Include="inc\Ooh.h">
       <Filter>inc</Filter>
     </ClInclude>
-    <ClInclude Include="inc\ooh_gobj.h" />
+    <ClInclude Include="inc\Ooh_gobj.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\ooh.cpp" />
+    <ClCompile Include="src\Ooh.cpp" />
   </ItemGroup>
 </Project>

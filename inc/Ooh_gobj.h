@@ -2,9 +2,9 @@
 
 #include "types.h"
 
-namespace ooh
+namespace Ooh
 {
-	// TODO: do we even want this in ooh it seems out of place...
+	// TODO: do we even want this in Ooh it seems out of place...
 	struct game_object
 	{
 		uti::u64  shader;

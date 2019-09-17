@@ -27,7 +27,7 @@ rem   goto error
 rem )
 
 rem /WX
-set cl_flags=/GS /W3 /Zc:wchar_t /ZI -Gm- -GR- /Od /sdl /Zc:inline /fp:precise /I%inc_dirs% /Tp%file_dir%\%file_name%.ooh
+set cl_flags=/GS /W3 /Zc:wchar_t /ZI -Gm- -GR- /Od /sdl /Zc:inline /fp:precise /I%inc_dirs% /Tp%file_dir%\%file_name%.Ooh
 set link_flags=/link /incremental:no /opt:ref /pdb:%out_dir%\%file_name%_%random%.pdb /OUT:%out_dir%\%file_name%.dll /DLL user32.lib
 del %out_dir%\%file_name%_*.pdb
 set cl_cmd_all=%cl_flags% %link_flags%

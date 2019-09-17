@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ooh", "ooh.vcxproj", "{CAC45B25-33B4-48C4-A56B-4251EABDC050}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Ooh", "Ooh.vcxproj", "{CAC45B25-33B4-48C4-A56B-4251EABDC050}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ooh_test", "ooh_test\ooh_test.vcxproj", "{87BDAC0D-3A75-4859-8227-14D257B3FEF3}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Ooh_test", "Ooh_test\Ooh_test.vcxproj", "{87BDAC0D-3A75-4859-8227-14D257B3FEF3}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ooh_test_exe", "ooh_test_exe\ooh_test_exe.vcxproj", "{4D40546A-9D7A-4618-865B-6019773CD027}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Ooh_test_exe", "Ooh_test_exe\Ooh_test_exe.vcxproj", "{4D40546A-9D7A-4618-865B-6019773CD027}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
