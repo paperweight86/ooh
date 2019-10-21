@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{CAC45B25-33B4-48C4-A56B-4251EABDC050}</ProjectGuid>
     <RootNamespace>Ooh</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
     <ProjectName>Ooh</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -136,7 +136,7 @@
     <ClInclude Include="inc\Ooh_gobj.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Ooh.cpp" />
+    <ClCompile Include="src\Ooh_windows.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -15,6 +15,8 @@
     <ClInclude Include="inc\Ooh_gobj.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Ooh.cpp" />
+    <ClCompile Include="src\Ooh_windows.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

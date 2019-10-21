@@ -1,34 +1,34 @@
 #pragma once
 
-namespace Ooh
+namespace ooh
 {
-	typedef void Ooh_load_all_signature(char* data, uti::u64 total_size);
-	typedef uti::u64 Ooh_get_save_all_size_signature();
-	typedef void Ooh_save_all_signature(char* data, uti::u64 total_size);
+	typedef void ooh_load_all_signature(char* data, uti::u64 total_size);
+	typedef uti::u64 ooh_get_save_all_size_signature();
+	typedef void ooh_save_all_signature(char* data, uti::u64 total_size);
 
-	typedef uti::u64 Ooh_create_signature();
-	typedef void	 Ooh_load_signature(uti::u64 obj_id, char* data, uti::u64 size);
-	typedef void	 Ooh_save_signature(uti::u64 obj_id, char* data, uti::u64 size);
-	typedef uti::u64 Ooh_data_size_signature();
-	typedef void	 Ooh_start_signature(uti::u64 obj_id);
-	typedef void	 Ooh_update_signature(uti::u64 obj_id, float dt);
-	typedef void	 Ooh_stop_signature(uti::u64 obj_id);
-	typedef void	 Ooh_unload_signature(uti::u64 obj_id);
+	typedef uti::u64 ooh_create_signature();
+	typedef void	 ooh_load_signature(uti::u64 obj_id, char* data, uti::u64 size);
+	typedef void	 ooh_save_signature(uti::u64 obj_id, char* data, uti::u64 size);
+	typedef uti::u64 ooh_data_size_signature();
+	typedef void	 ooh_start_signature(uti::u64 obj_id);
+	typedef void	 ooh_update_signature(uti::u64 obj_id, float dt);
+	typedef void	 ooh_stop_signature(uti::u64 obj_id);
+	typedef void	 ooh_unload_signature(uti::u64 obj_id);
 
 	struct behaviour_functions
 	{
-		Ooh_load_all_signature*				load_all;
-		Ooh_get_save_all_size_signature*	save_all_size;
-		Ooh_save_all_signature*				save_all;
+		ooh_load_all_signature*				load_all;
+		ooh_get_save_all_size_signature*	save_all_size;
+		ooh_save_all_signature*				save_all;
 
-		Ooh_create_signature*	 create;
-		Ooh_load_signature*		 load;
-		Ooh_save_signature*		 save;
-		Ooh_data_size_signature* data_size;
-		Ooh_start_signature*	 start;
-		Ooh_update_signature*	 update;
-		Ooh_stop_signature*		 stop;
-		Ooh_unload_signature*	 unload;
+		ooh_create_signature*	 create;
+		ooh_load_signature*		 load;
+		ooh_save_signature*		 save;
+		ooh_data_size_signature* data_size;
+		ooh_start_signature*	 start;
+		ooh_update_signature*	 update;
+		ooh_stop_signature*		 stop;
+		ooh_unload_signature*	 unload;
 	};
 
 	typedef uti::u64 script_inst_handle;
@@ -60,11 +60,11 @@ namespace Ooh
 
 	bool load_functions(uti::ptr dll_handle, const char* function_prefix, behaviour_functions* table);
 
-	bool init_script(script_data* Ooh_data);
+	bool init_script(script_data* ooh_data);
 
-	bool load_script(script_data* Ooh_data);
+	bool load_script(script_data* ooh_data);
 
-	bool unload_script(script_data* Ooh_data);
+	bool unload_script(script_data* ooh_data);
 
-	bool reload_script(script_data* Ooh_data);
+	bool reload_script(script_data* ooh_data);
 }
